@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/
+env/
+
+# Environment variables (NEVER COMMIT THESE)
+.env
+.env.local
+.env.*.local
+
+# Next.js
+.next/
+out/
+build/
+dist/
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# Supabase Local Development
+# We keep migrations and config, but ignore the local database state
+supabase/.branches
+supabase/.temp
+supabase/functions/.env
+# This folder contains the running Docker container data - do not commit
+.supabase/ 
+
+# VS Code settings (optional, usually good to ignore)
+.vscode/
