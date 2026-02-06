@@ -8,8 +8,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import OrderManager from "@/components/OrderManager"; 
 
-// 1. Define the Shape of our Data (TypeScript Interface)
+// --- TYPES ---
 interface Product {
   id: string;
   name: string;
@@ -19,35 +21,43 @@ interface Product {
   unit_price: number;
 }
 
-// 2. The Fetch Function (Running on the Server)
+// --- FETCHERS ---
 async function getInventory() {
-  // We fetch from the Python Backend we just built
   const res = await fetch("http://127.0.0.1:8000/inventory", {
-    cache: "no-store", // Ensure we always get fresh data
+    cache: "no-store",
   });
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch inventory");
-  }
-
+  if (!res.ok) throw new Error("Failed to fetch inventory");
   return res.json();
 }
 
-// 3. The Page Component
-export default async function Dashboard() {
-  const products: Product[] = await getInventory();
+async function getOrders() {
+  try {
+    const res = await fetch("http://127.0.0.1:8000/orders", {
+      cache: "no-store",
+    });
+    if (!res.ok) return [];
+    return res.json();
+  } catch (e) {
+    return [];
+  }
+}
 
-  // Calculate simple stats for the top cards
+export default async function Dashboard() {
+  const inventoryData = getInventory();
+  const ordersData = getOrders();
+
+  const [products, orders] = await Promise.all([inventoryData, ordersData]);
+
   const totalValue = products.reduce(
-    (acc, p) => acc + p.current_stock * p.unit_price,
+    (acc: number, p: Product) => acc + p.current_stock * p.unit_price,
     0,
   );
   const lowStockCount = products.filter(
-    (p) => p.current_stock < p.min_stock_threshold,
+    (p: Product) => p.current_stock < p.min_stock_threshold,
   ).length;
 
   return (
-    <div className="p-8 space-y-8 bg-zinc-50 min-h-screen">
+    <div className="p-8 space-y-8 bg-zinc-50 min-h-screen font-sans">
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
@@ -56,12 +66,15 @@ export default async function Dashboard() {
           </h1>
           <p className="text-zinc-500">Autonomous Supply Chain Monitor</p>
         </div>
-        <Badge
-          variant="outline"
-          className="px-4 py-1 text-green-600 bg-green-50 border-green-200"
-        >
-          System Active
-        </Badge>
+        <div className="flex gap-2">
+          <Button variant="outline">Trigger Agent (Manual)</Button>
+          <Badge
+            variant="outline"
+            className="px-4 py-1 text-green-600 bg-green-50 border-green-200"
+          >
+            System Active
+          </Badge>
+        </div>
       </div>
 
       {/* KPI Cards */}
@@ -91,24 +104,26 @@ export default async function Dashboard() {
             >
               {lowStockCount} Items
             </div>
-            {lowStockCount > 0 && (
-              <p className="text-xs text-red-500 mt-1">Requires Attention</p>
-            )}
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-zinc-500">
-              Active Agents
+              Pending Approvals
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">1</div>
-            <p className="text-xs text-zinc-500 mt-1">Inventory Monitor</p>
+            <div className="text-2xl font-bold text-amber-600">
+              {orders.length}
+            </div>
+            <p className="text-xs text-zinc-500 mt-1">Awaiting Human Review</p>
           </CardContent>
         </Card>
       </div>
+
+      {/* --- THE INTERACTIVE ORDER MANAGER --- */}
+      <OrderManager orders={orders} />
 
       {/* Inventory Table */}
       <Card>
@@ -127,7 +142,7 @@ export default async function Dashboard() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {products.map((product) => (
+              {products.map((product: Product) => (
                 <TableRow key={product.id}>
                   <TableCell className="font-medium">{product.name}</TableCell>
                   <TableCell className="font-mono text-xs text-zinc-500">
@@ -148,7 +163,7 @@ export default async function Dashboard() {
                     ) : (
                       <Badge
                         variant="secondary"
-                        className="bg-green-100 text-green-700 hover:bg-green-100"
+                        className="bg-green-100 text-green-700"
                       >
                         Healthy
                       </Badge>
