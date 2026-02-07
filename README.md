@@ -3,8 +3,11 @@
 > A Full-Stack AI Agent that autonomously monitors inventory levels, detects shortages, and drafts Purchase Orders for human approval.
 
 ![Project Status](https://img.shields.io/badge/Status-Active-success)
+![Docker](https://img.shields.io/badge/Docker-Enabled-blue?logo=docker&logoColor=white)
 ![AI Model](https://img.shields.io/badge/AI-GPT--4-blue)
 ![Stack](https://img.shields.io/badge/Stack-Next.js%20%7C%20FastAPI%20%7C%20Supabase-orange)
+
+---
 
 ## 📖 Overview
 
@@ -12,13 +15,18 @@
 
 The system features a **Human-in-the-Loop** workflow: the AI *proposes* the order with reasoning (e.g., "Stock is 5, minimum is 10"), but a human manager must click "Approve" on the dashboard to finalize it.
 
+---
+
 ## 🏗️ Architecture
 
 The system is built as a monorepo with a clear separation of concerns:
 
 
-
-[Image of System Architecture Diagram]
+<br />
+<div align="center">
+  <img width="800" alt="System Architecture" src="https://github.com/user-attachments/assets/1fd9a7c5-d3c4-4db1-bd9e-703290a205ab" />
+</div>
+<br />
 
 
 ### 1. The Brain (Backend)
@@ -46,72 +54,139 @@ The system is built as a monorepo with a clear separation of concerns:
 ## 🚀 Getting Started
 
 ### Prerequisites
-* Node.js 18+
-* Python 3.10+
-* Supabase Account
-* OpenAI API Key
+* **Docker Desktop** (Recommended method)
+* **OR:** Node.js 18+ & Python 3.10+ (Manual method)
+* OpenAI API Key & Supabase Credentials
 
-### 1. Clone the Repository
+### Option A: Run with Docker 🐳 (Recommended)
+The fastest way to test the system. No need to install Python or Node locally.
+
+1. **Clone the repository:**
+
 ```bash
 git clone [https://github.com/yourusername/auto-procure.git](https://github.com/yourusername/auto-procure.git)
 cd auto-procure
-2. Backend Setup
-Navigate to the backend folder and set up the Python environment.
+```
 
-Bash
-cd backend
-python -m venv venv
-# Windows
-venv\Scripts\activate
-# Mac/Linux
-source venv/bin/activate
+2. **Configure Environment:** Create a ```.env``` file in the ```backend/``` folder:
 
-pip install -r requirements.txt
-Create a .env file in backend/ with your keys:
-
-Code snippet
+```bash
 OPENAI_API_KEY=sk-...
 SUPABASE_URL=...
 SUPABASE_KEY=...
-Run the server:
+```
 
-Bash
+3. **Launch the System:** Run this command in the root folder:
+
+```bash
+docker-compose up --build
+```
+
+The Dashboard will be available at ```http://localhost:3000``` and the API at ```http://localhost:8000```.
+
+---
+
+### Option B: Manual Installation 🛠️
+Use this if you want to modify the code or debug locally.
+
+1. **Backend Setup**
+
+```bash
+cd backend
+python -m venv venv
+# Windows: venv\Scripts\activate  |  Mac/Linux: source venv/bin/activate
+
+pip install -r requirements.txt
+```
+
+2. **Configure Keys** Create a ```.env``` file in ```backend/``` as shown in Option A.
+
+3. **Run Backend**
+
+```bash
 python run.py
 # Server starts at [http://127.0.0.1:8000](http://127.0.0.1:8000)
-3. Frontend Setup
-Open a new terminal and navigate to the frontend.
+```
 
-Bash
+4. **Frontend Setup** Open a new terminal:
+
+```bash
 cd frontend
 npm install
 npm run dev
 # Dashboard runs at http://localhost:3000
-🧠 How the Agent Works
+```
+
+---
+
+## ▶️ Usage / Demo
+
+Once both servers are running, you can manually trigger the AI Agent to perform a supply chain check cycle.
+
+**Option 1: Via Terminal (API)**
+Open a new terminal and run:
+
+```bash
+# Windows (PowerShell)
+curl.exe -X POST [http://127.0.0.1:8000/run-agent](http://127.0.0.1:8000/run-agent)
+
+# Mac / Linux / Git Bash
+curl -X POST [http://127.0.0.1:8000/run-agent](http://127.0.0.1:8000/run-agent)
+```
+
+**Option 2: Via Dashboard**
+
+1. Navigate to ```http://localhost:3000```.
+
+2. View the **Live Inventory Feed**.
+
+3. If an order is needed, the **"AI Drafted Orders"** section will appear automatically.
+
+4. Click **"Approve"** to finalize the order.
+
+---
+
+## 🧠 How the Agent Works
+
 The Supply Chain Analyst agent follows a strict logic loop:
 
-OBSERVE: Calls the check_low_stock tool to scan the products table in Supabase.
+* **OBSERVE:** Calls the ```check_low_stock``` tool to scan the ```products``` table in Supabase.
 
-REASON: Identifies items where current_stock < min_threshold.
+* **REASON:** Identifies items where ```current_stock < min_threshold```.
 
-ACT: Groups items by vendor and calls the create_draft_order tool.
+* **ACT:** Groups items by vendor and calls the ```create_draft_order``` tool.
 
-RECORD: Writes a new row to the purchase_orders table with status pending_approval.
+* **RECORD:** Writes a new row to the ```purchase_orders``` table with status ```pending_approval```.
 
-Example AI Output
-"I have detected low stock for RTX 3080 (Count: 2, Min: 10). I am creating a draft order for 8 units to restore healthy levels."
+**Example AI Output:**
+***"I have detected low stock for RTX 3080 (Count: 2, Min: 10). I am creating a draft order for 8 units to restore healthy levels."***
 
-📸 Screenshots
-(Add your screenshots here later!)
+---
 
-🔮 Future Improvements
-Email Notifications: Send an alert to the manager when a draft is created.
+## 📸 Screenshots
 
-Multi-Agent System: Add a "Price Negotiator" agent to check competitor prices.
+**The Dashboard** Interface Real-time inventory tracking with the AI Approval Queue active.
 
-Historical Analysis: Use vector search to predict seasonal trends.
+<img width="2534" height="1183" alt="Screenshot 2026-02-06 184406" src="https://github.com/user-attachments/assets/ec062421-5702-45d0-8990-267cbc9efcf4" />
 
-🤝 Contributing
+---
+
+## 🔮 Future Improvements
+
+* [ ] **Email Notifications:** Send an alert to the manager when a draft is created.
+
+* [ ] **Multi-Agent System:** Add a "Price Negotiator" agent to check competitor prices.
+
+* [ ] **Historical Analysis:** Use vector search to predict seasonal trends.
+
+---
+
+## 🤝 Contributing
+
 Contributions, issues, and feature requests are welcome!
 
-📝 License
-This project is MIT licensed.
+---
+
+## 📝 License
+
+This project is **MIT** licensed.
