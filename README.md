@@ -72,7 +72,8 @@ cd auto-procure
 
 ```bash
 OPENAI_API_KEY=sk-...
-SUPABASE_URL=...
+SUPABASE_URL=http://host.docker.internal:54321  # Use this for local Docker (Windows/Mac)
+   # OR use your cloud URL: https://xyz.supabase.co
 SUPABASE_KEY=...
 ```
 
@@ -127,11 +128,11 @@ Once both servers are running, you can manually trigger the AI Agent to perform 
 Open a new terminal and run:
 
 ```bash
-# Windows (PowerShell)
-curl.exe -X POST [http://127.0.0.1:8000/run-agent](http://127.0.0.1:8000/run-agent)
+# Windows (PowerShell) - Note the .exe usage
+curl.exe -X POST http://localhost:8000/run-agent
 
 # Mac / Linux / Git Bash
-curl -X POST [http://127.0.0.1:8000/run-agent](http://127.0.0.1:8000/run-agent)
+curl -X POST http://localhost:8000/run-agent
 ```
 
 **Option 2: Via Dashboard**
@@ -178,6 +179,18 @@ The Supply Chain Analyst agent follows a strict logic loop:
 * [ ] **Multi-Agent System:** Add a "Price Negotiator" agent to check competitor prices.
 
 * [ ] **Historical Analysis:** Use vector search to predict seasonal trends.
+
+---
+
+## 🔧 Troubleshooting
+
+* **Backend Connection Refused?**
+
+  Ensure your `SUPABASE_URL` in `.env` uses `http://host.docker.internal:54321` if running Supabase locally. `localhost` inside a container refers to the container itself, not your machine.
+
+* **Frontend Fetch Failed?**
+
+  Ensure your frontend code uses the Docker service name (`http://backend:8000`) for server-side fetches, and `localhost` for client-side fetches.
 
 ---
 
