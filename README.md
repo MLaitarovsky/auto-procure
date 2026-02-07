@@ -3,8 +3,11 @@
 > A Full-Stack AI Agent that autonomously monitors inventory levels, detects shortages, and drafts Purchase Orders for human approval.
 
 ![Project Status](https://img.shields.io/badge/Status-Active-success)
+![Docker](https://img.shields.io/badge/Docker-Enabled-blue?logo=docker&logoColor=white)
 ![AI Model](https://img.shields.io/badge/AI-GPT--4-blue)
 ![Stack](https://img.shields.io/badge/Stack-Next.js%20%7C%20FastAPI%20%7C%20Supabase-orange)
+
+---
 
 ## 📖 Overview
 
@@ -12,14 +15,18 @@
 
 The system features a **Human-in-the-Loop** workflow: the AI *proposes* the order with reasoning (e.g., "Stock is 5, minimum is 10"), but a human manager must click "Approve" on the dashboard to finalize it.
 
+---
+
 ## 🏗️ Architecture
 
 The system is built as a monorepo with a clear separation of concerns:
 
 
-
-<img width="2316" height="1278" alt="mermaid-diagram-2026-02-06-211428" src="https://github.com/user-attachments/assets/1fd9a7c5-d3c4-4db1-bd9e-703290a205ab" />
-
+<br />
+<div align="center">
+  <img width="800" alt="System Architecture" src="https://github.com/user-attachments/assets/1fd9a7c5-d3c4-4db1-bd9e-703290a205ab" />
+</div>
+<br />
 
 
 ### 1. The Brain (Backend)
@@ -47,31 +54,21 @@ The system is built as a monorepo with a clear separation of concerns:
 ## 🚀 Getting Started
 
 ### Prerequisites
-* Node.js 18+
-* Python 3.10+
-* Supabase Account
-* OpenAI API Key
+* **Docker Desktop** (Recommended method)
+* **OR:** Node.js 18+ & Python 3.10+ (Manual method)
+* OpenAI API Key & Supabase Credentials
 
-### 1. Clone the Repository
+### Option A: Run with Docker 🐳 (Recommended)
+The fastest way to test the system. No need to install Python or Node locally.
+
+1. **Clone the repository:**
+
 ```bash
 git clone [https://github.com/yourusername/auto-procure.git](https://github.com/yourusername/auto-procure.git)
 cd auto-procure
 ```
 
-### 2. Backend Setup
-Navigate to the backend folder and set up the Python environment.
-
-```bash
-cd backend
-python -m venv venv
-# Windows
-venv\Scripts\activate
-# Mac/Linux
-source venv/bin/activate
-
-pip install -r requirements.txt
-```
-Create a ```.env``` file in ```backend/``` with your keys:
+2. **Configure Environment:** Create a ```.env``` file in the ```backend/``` folder:
 
 ```bash
 OPENAI_API_KEY=sk-...
@@ -79,15 +76,39 @@ SUPABASE_URL=...
 SUPABASE_KEY=...
 ```
 
-Run the server:
+3. **Launch the System:** Run this command in the root folder:
+
+```bash
+docker-compose up --build
+```
+
+The Dashboard will be available at ```http://localhost:3000``` and the API at ```http://localhost:8000```.
+
+---
+
+### Option B: Manual Installation 🛠️
+Use this if you want to modify the code or debug locally.
+
+1. **Backend Setup**
+
+```bash
+cd backend
+python -m venv venv
+# Windows: venv\Scripts\activate  |  Mac/Linux: source venv/bin/activate
+
+pip install -r requirements.txt
+```
+
+2. **Configure Keys** Create a ```.env``` file in ```backend/``` as shown in Option A.
+
+3. **Run Backend**
 
 ```bash
 python run.py
 # Server starts at [http://127.0.0.1:8000](http://127.0.0.1:8000)
 ```
 
-### 3. Frontend Setup
-Open a new terminal and navigate to the frontend.
+4. **Frontend Setup** Open a new terminal:
 
 ```bash
 cd frontend
@@ -117,11 +138,11 @@ curl -X POST [http://127.0.0.1:8000/run-agent](http://127.0.0.1:8000/run-agent)
 
 1. Navigate to ```http://localhost:3000```.
 
-2. View the Live Inventory Feed.
+2. View the **Live Inventory Feed**.
 
-3. If an order is needed, the "AI Drafted Orders" section will appear automatically.
+3. If an order is needed, the **"AI Drafted Orders"** section will appear automatically.
 
-4. Click "Approve" to finalize the order.
+4. Click **"Approve"** to finalize the order.
 
 ---
 
@@ -152,11 +173,11 @@ The Supply Chain Analyst agent follows a strict logic loop:
 
 ## 🔮 Future Improvements
 
-* **Email Notifications:** Send an alert to the manager when a draft is created.
+* [ ] **Email Notifications:** Send an alert to the manager when a draft is created.
 
-* **Multi-Agent System:** Add a "Price Negotiator" agent to check competitor prices.
+* [ ] **Multi-Agent System:** Add a "Price Negotiator" agent to check competitor prices.
 
-* **Historical Analysis:** Use vector search to predict seasonal trends.
+* [ ] **Historical Analysis:** Use vector search to predict seasonal trends.
 
 ---
 
