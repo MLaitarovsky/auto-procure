@@ -1,0 +1,14 @@
+# Ignore backend junk
+backend/venv/
+backend/__pycache__/
+backend/.env
+
+# Ignore frontend junk
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/build/
+
+# Ignore git
+.git/
+.gitignore

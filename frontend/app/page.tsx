@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import OrderManager from "@/components/OrderManager"; 
+import OrderManager from "@/components/OrderManager";
 
 // --- TYPES ---
 interface Product {
@@ -23,7 +23,7 @@ interface Product {
 
 // --- FETCHERS ---
 async function getInventory() {
-  const res = await fetch("http://127.0.0.1:8000/inventory", {
+  const res = await fetch("http://backend:8000/inventory", {
     cache: "no-store",
   });
   if (!res.ok) throw new Error("Failed to fetch inventory");
@@ -32,7 +32,8 @@ async function getInventory() {
 
 async function getOrders() {
   try {
-    const res = await fetch("http://127.0.0.1:8000/orders", {
+    // We update this URL to point to the docker service name 'backend'
+    const res = await fetch("http://backend:8000/orders", {
       cache: "no-store",
     });
     if (!res.ok) return [];
